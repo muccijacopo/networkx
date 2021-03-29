@@ -65,11 +65,13 @@ def generic_bfs_edges(G, source, neighbors=None, depth_limit=None, sort_neighbor
     .. _PADS: http://www.ics.uci.edu/~eppstein/PADS/BFS.py
     .. _Depth-limited-search: https://en.wikipedia.org/wiki/Depth-limited_search
     """
+
     if callable(sort_neighbors):
         _neighbors = neighbors
         neighbors = lambda node: iter(sort_neighbors(_neighbors(node)))
 
     visited = {source}
+    print(f"Visiting node {source}...")
     if depth_limit is None:
         depth_limit = len(G)
     queue = deque([(source, depth_limit, neighbors(source))])
@@ -77,11 +79,14 @@ def generic_bfs_edges(G, source, neighbors=None, depth_limit=None, sort_neighbor
         parent, depth_now, children = queue[0]
         try:
             child = next(children)
+            print(f"Visiting node {child}...")
             if child not in visited:
                 yield parent, child
                 visited.add(child)
                 if depth_now > 1:
                     queue.append((child, depth_now - 1, neighbors(child)))
+            else:
+                print("Already visited!")
         except StopIteration:
             queue.popleft()
 
